@@ -64,5 +64,10 @@ const updateValue = (event) => {
   border: 1px solid rgb(65, 72, 72);
   border-radius: 10px;
   padding: 10px 15px;
+  &:focus {
+    border-color: #42b883; /* стандартный зеленый цвет Vue */
+    box-shadow: 0 0 0 1px rgba(70, 130, 180, 0.5); /* стандартная тень Vue */
+    outline: none;
+  }
 }
 </style>

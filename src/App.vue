@@ -1,36 +1,59 @@
 <template>
   <div class="app">
-    <ToggleStatus />
-    <PostForm @create="createPost" />
+    <!-- <ToggleStatus /> -->
+    <h1>Страница с постами</h1>
+    <input type="text" v-model="modifcatorValue" placeholder="some placeholder" />
+    <AppButton @click="showDialog" style="margin: 18px 0">Создать пост</AppButton>
+    <DialogWindow v-model:show="dialogVisible">
+      <PostForm @create="createPost" />
+    </DialogWindow>
     <PostList v-if="posts.length > 0" :posts="posts" @remove="removePost" />
     <h2 v-else>Список постов пуст</h2>
+
     <!-- <EffectExample /> -->
   </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import PostForm from '@/components/PostForm.vue'
 import PostList from '@/components/PostList.vue'
 import ToggleStatus from '@/components/ToggleStatus.vue'
+import DialogWindow from '@/components/UI/DialogWindow.vue'
+import AppButton from '@/components/UI/AppButton.vue'
+import axios from 'axios'
 // import EffectExample from '@/components/EffectExample.vue'
 
-const posts = reactive([
-  // { id: 1, title: 'Javascript', body: 'Javascript универсальный язык программирования' },
-  // { id: 2, title: 'Python', body: 'Python универсальный язык программирования' },
-  // { id: 3, title: 'C#', body: 'C# универсальный язык программирования' }
-])
-console.log(posts)
+const posts = ref([])
+const dialogVisible = ref(false)
+const modifcatorValue = ref('')
 const createPost = (post) => {
-  posts.unshift(post)
+  posts.value.unshift(post)
+  dialogVisible.value = false
 }
 
-const removePost = (post) => {
-  const index = posts.findIndex((p) => p.id === post.id)
+const removePost = (id) => {
+  const index = posts.value.findIndex((p) => p.id === id)
   if (index !== -1) {
-    posts.splice(index, 1)
+    posts.value.splice(index, 1)
   }
 }
+const showDialog = () => {
+  dialogVisible.value = true
+}
+
+const fetchPosts = async () => {
+  try {
+    const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
+    posts.value = [...response.data, ...posts.value]
+  } catch (error) {
+    alert('Ошибка при получении постов')
+  }
+}
+
+onMounted(() => {
+  fetchPosts()
+})
 </script>
 
 <style>

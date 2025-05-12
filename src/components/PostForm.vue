@@ -62,21 +62,6 @@ const emit = defineEmits(['create'])
   padding: 10px 15px;
 }
 
-/* .form-button {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid rgb(65, 72, 72);
-  border-radius: 10px;
-  width: 30%;
-  align-self: flex-end;
-  color: teal;
-} */
-
-/* .form button:hover {
-  background-color: teal;
-  color: #fff;
-} */
-
 .form-title {
   text-align: center;
   margin-bottom: 10px;

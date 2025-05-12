@@ -1,7 +1,12 @@
 <template>
   <div class="post-list">
     <h3>{{ posts.length > 0 ? 'Список постов' : 'Список постов пуст' }}</h3>
-    <PostItem v-for="post in posts" :key="post.id" :post="post" @remove="$emit('remove', post)" />
+    <PostItem
+      v-for="post in posts"
+      :key="post.id"
+      :post="post"
+      @remove="$emit('remove', post.id)"
+    />
   </div>
 </template>
 
