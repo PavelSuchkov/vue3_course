@@ -5,7 +5,7 @@
       <div><strong>Описвние: </strong> {{ post.body }}</div>
     </div>
     <div class="post-btns">
-      <AppButton variant="danger" class="btn" @click="$emit('remove', post)">Удалить</AppButton>
+      <AppButton variant="danger" class="btn" @click="$emit('remove', post.id)">Удалить</AppButton>
       <AppButton class="edit-btn">Изменить</AppButton>
     </div>
   </div>
