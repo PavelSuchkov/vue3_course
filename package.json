@@ -45,7 +45,12 @@
     "parserOptions": {
       "ecmaVersion": 2020
     },
-    "rules": {}
+    "rules": {
+      "semi": "off",
+      "comma-dangle": "off",
+      "@typescript-eslint/semi": "off",
+      "@typescript-eslint/member-delimiter-style": "off"
+    }
   },
   "browserslist": [
     "> 1%",
