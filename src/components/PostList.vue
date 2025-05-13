@@ -10,17 +10,28 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts">
+import Vue from 'vue'
 import PostItem from '@/components/PostItem.vue'
-import { defineEmits, defineProps } from 'vue'
 
-defineProps({
-  posts: {
-    type: Array,
-    required: true
+interface Post {
+  id: number
+  title: string
+  body: string
+}
+
+export default Vue.extend({
+  name: 'PostList',
+  components: {
+    PostItem
+  },
+  props: {
+    posts: {
+      type: Array as () => Post[],
+      required: true
+    }
   }
 })
-defineEmits(['remove'])
 </script>
 
 <style scoped>

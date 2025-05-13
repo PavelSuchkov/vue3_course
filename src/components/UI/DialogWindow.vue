@@ -6,18 +6,20 @@
   </div>
 </template>
 
-<script setup>
-import { defineEmits, defineProps } from 'vue'
-
-defineProps({
-  show: {
-    type: Boolean,
-    required: true
+<script>
+export default {
+  name: 'DialogWindow',
+  props: {
+    show: {
+      type: Boolean,
+      required: true
+    }
+  },
+  methods: {
+    closeDialog() {
+      this.$emit('update:show', false)
+    }
   }
-})
-const emit = defineEmits(['update:show'])
-const closeDialog = () => {
-  emit('update:show', false)
 }
 </script>
 

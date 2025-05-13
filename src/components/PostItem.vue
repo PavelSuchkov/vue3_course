@@ -11,14 +11,28 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts">
+import Vue from 'vue'
 import AppButton from '@/components/UI/AppButton.vue'
-import { defineProps, defineEmits } from 'vue'
 
-defineProps({
-  post: { type: Object, required: true }
+interface Post {
+  id: number
+  title: string
+  body: string
+}
+
+export default Vue.extend({
+  name: 'PostItem',
+  components: {
+    AppButton
+  },
+  props: {
+    post: {
+      type: Object as () => Post,
+      required: true
+    }
+  }
 })
-defineEmits(['remove'])
 </script>
 
 <style scoped>
@@ -35,7 +49,6 @@ defineEmits(['remove'])
   display: flex;
   flex-direction: column;
   gap: 10px;
-  /* align-items: center; */
   justify-content: center;
 }
 
@@ -58,11 +71,12 @@ defineEmits(['remove'])
   cursor: pointer;
   width: 100px;
   transition: all 0.3s ease;
-  &:hover {
-    background-color: #e74c3c;
-    color: white;
-    border-color: #e74c3c;
-  }
+}
+
+.btn:hover {
+  background-color: #e74c3c;
+  color: white;
+  border-color: #e74c3c;
 }
 
 .edit-btn {
@@ -77,9 +91,10 @@ defineEmits(['remove'])
   cursor: pointer;
   width: 100px;
   transition: all 0.3s ease;
-  &:hover {
-    background-color: teal;
-    color: white;
-  }
+}
+
+.edit-btn:hover {
+  background-color: teal;
+  color: white;
 }
 </style>

@@ -1,18 +1,8 @@
 <template>
   <form class="form" @submit.prevent>
     <h4 class="form-title">Создание поста</h4>
-    <AppInput
-      v-model="post.title"
-      type="text"
-      :update:modelValue="updateTitle"
-      placeholder="Название"
-    />
-    <AppInput
-      v-model="post.body"
-      type="text"
-      :update:modelValue="updateBody"
-      placeholder="Описание"
-    />
+    <AppInput :value="post.title" type="text" placeholder="Название" @input="post.title = $event" />
+    <AppInput :value="post.body" type="text" placeholder="Описание" @input="post.body = $event" />
     <!-- <input v-model="post.title" class="form-input" type="text" placeholder="Название" /> -->
     <!-- <input v-model="post.body" class="form-input" type="text" placeholder="Описание" /> -->
     <AppButton @click="createPost" class="form-button" :disabled="!post.title || !post.body">
@@ -21,30 +11,33 @@
   </form>
 </template>
 
-<script setup>
-import { reactive, defineEmits } from 'vue'
+<script>
 import AppButton from '@/components/UI/AppButton.vue'
 import AppInput from '@/components/UI/AppInput.vue'
-const post = reactive({
-  title: '',
-  body: ''
-})
-const updateTitle = (value) => {
-  post.title = value
-}
-const updateBody = (value) => {
-  post.body = value
-}
-console.log(post)
 
-const createPost = () => {
-  post.id = Date.now()
-  emit('create', { ...post })
-  post.title = ''
-  post.body = ''
+export default {
+  name: 'PostForm',
+  components: {
+    AppButton,
+    AppInput
+  },
+  data() {
+    return {
+      post: {
+        title: '',
+        body: ''
+      }
+    }
+  },
+  methods: {
+    createPost() {
+      this.post.id = Date.now()
+      this.$emit('create', { ...this.post })
+      this.post.title = ''
+      this.post.body = ''
+    }
+  }
 }
-
-const emit = defineEmits(['create'])
 </script>
 
 <style scoped>

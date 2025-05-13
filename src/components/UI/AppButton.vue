@@ -1,17 +1,19 @@
 <template>
-  <button class="button">
+  <button class="button" @click="$emit('click')">
     <slot></slot>
   </button>
 </template>
 
-<script setup>
-import { defineProps } from 'vue'
-defineProps({
-  variant: {
-    type: String,
-    default: 'primary'
+<script>
+export default {
+  name: 'AppButton',
+  props: {
+    variant: {
+      type: String,
+      default: 'primary'
+    }
   }
-})
+}
 </script>
 
 <style scoped>
@@ -23,19 +25,23 @@ defineProps({
   width: 30%;
   align-self: flex-end;
   color: teal;
-  &:hover {
-    background-color: rgb(65, 72, 72);
-    color: #fff;
-  }
+  cursor: pointer;
 }
+
+.button:hover {
+  background-color: rgb(65, 72, 72);
+  color: #fff;
+}
+
 .button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   background-color: #ccc;
   color: #666;
-  &:hover {
-    background-color: #ccc;
-    color: #666;
-  }
+}
+
+.button:disabled:hover {
+  background-color: #ccc;
+  color: #666;
 }
 </style>
