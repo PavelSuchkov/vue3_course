@@ -1,0 +1,137 @@
+---
+description: 
+globs: *.vue, src/**/*.ts, src/**/*.js,*.ts,*.js,*.json
+alwaysApply: false
+---
+## Project Architecture
+- Vue 2 with TypeScript/JavaScript hybrid approach
+- Single File Components (.vue)
+- No state management library (direct component communication)
+- No routing implementation currently
+
+## Component Organization
+/src
+  /components
+    /UI          # Reusable UI components with 'App' prefix
+    PostForm     # Business logic components
+    PostList     # List components
+    PostItem     # Individual item components
+
+## TypeScript Usage
+- Vue.extend() for TypeScript components
+- Interface definitions:
+  ```typescript
+  interface Post {
+    id: number
+    title: string
+    body: string
+  }
+  ```
+- Props typing required for TypeScript components
+- JavaScript allowed for simpler components
+
+## Component Patterns
+1. UI Components:
+   - Prefix: 'App' (AppButton, AppInput, etc.)
+   - Keep stateless where possible
+   - Accept v-model compatible props
+   - Emit events for parent handling
+
+2. Business Components:
+   - Clear responsibility separation
+   - Data management through props/events
+   - Local state for form handling
+   - Emit events for CRUD operations
+
+## Data Flow
+- Props down, events up
+- Event naming: 'create', 'remove', etc.
+- Use $emit for parent communication
+- Clone objects when emitting: { ...object }
+
+## API Integration
+- Axios for HTTP requests
+- Loading states implementation:
+  ```typescript
+  isLoading: boolean = true
+  ```
+- Timeout simulation for development
+- Error handling with try/catch
+- JSONPlaceholder as mock API
+
+## Styling Guidelines
+- Scoped styles per component
+- BEM-like naming:
+  ```css
+  .form {}
+  .form-input {}
+  .form-button {}
+  ```
+- Flexbox for layouts
+- Color variables:
+  - Primary: teal
+  - Border: rgb(65, 72, 72)
+- Loading spinner implementation
+
+## Form Handling
+- Prevent default form submission
+- Input validation
+- Disabled states for buttons
+- Clear form after submission
+
+## Error Handling
+- Try/catch blocks for async operations
+- User-friendly error messages
+- Loading states during operations
+- Proper error state management
+
+## Component Communication
+Example:
+```vue
+<!-- Parent -->
+<PostList :posts="posts" @remove="removePost" />
+
+<!-- Child -->
+@remove="$emit('remove', post.id)"
+```
+
+## Performance Considerations
+- Computed properties for sorting/filtering
+- v-if for conditional rendering
+- Proper key usage in v-for loops
+- Avoid deep nesting
+
+## Code Style
+- 2 space indentation
+- Single quotes for strings
+- Semicolons required
+- Component names in PascalCase
+- Event names in kebab-case
+
+## Development Practices
+- Console.log only in development
+- Comment unused features instead of deletion
+- Type checking for complex operations
+- Clear component documentation
+
+## File Structure
+Each component should follow:
+```vue
+<template>
+  <!-- Template markup -->
+</template>
+
+<script lang="ts">
+  // Component logic
+</script>
+
+<style scoped>
+  /* Component styles */
+</style>
+```
+
+## Testing Considerations
+- Components should be testable in isolation
+- Props validation required
+- Event handling should be predictable
+- Loading states should be verifiable
