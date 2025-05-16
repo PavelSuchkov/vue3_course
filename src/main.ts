@@ -4,6 +4,9 @@ import App from './App.vue'
 // import store from "./store";
 
 Vue.config.productionTip = false
+if (process.env.NODE_ENV === 'development') {
+  Vue.config.devtools = true
+}
 
 new Vue({
   render: (h) => h(App)
