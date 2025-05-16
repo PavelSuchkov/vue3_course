@@ -2,6 +2,9 @@
   <div class="app">
     <!-- <ToggleStatus /> -->
     <h1>Страница с постами</h1>
+    <div class="search__wrapper">
+      <AppInput v-model="searchQuery" placeholder="Поиск..." />
+    </div>
     <div class="app__btns">
       <AppButton @click="showDialog" style="margin: 18px 0">Создать пост</AppButton>
       <AppSelect v-model="selectedSort" :options="sortOptions" />
@@ -12,8 +15,8 @@
     </DialogWindow>
     <!-- <h2 v-if="posts.length === 0">Список постов пуст</h2> -->
     <div v-if="isLoading" class="spinner"></div>
-    <PostList v-else :posts="sortedPosts" @remove="removePost" />
-    <!-- <EffectExample /> -->
+    <PostList v-else :posts="sortedAndSearchedPosts" @remove="removePost" />
+    <Pagination :currentPage="page" :totalPages="totalPages" @changePage="changePage" />
   </div>
 </template>
 
@@ -24,6 +27,8 @@ import PostList from '@/components/PostList.vue'
 import DialogWindow from '@/components/UI/DialogWindow.vue'
 import AppButton from '@/components/UI/AppButton.vue'
 import AppSelect from '@/components/UI/AppSelect.vue'
+import AppInput from '@/components/UI/AppInput.vue'
+import Pagination from '@/components/Pagination.vue'
 import axios from 'axios'
 
 // import EffectExample from '@/components/EffectExample.vue'
@@ -41,13 +46,19 @@ export default Vue.extend({
     PostList,
     DialogWindow,
     AppButton,
-    AppSelect
+    AppSelect,
+    AppInput,
+    Pagination
   },
   data() {
     return {
       posts: [] as Post[],
       dialogVisible: false,
       selectedSort: '',
+      searchQuery: '',
+      page: 1,
+      limit: 10,
+      totalPages: 0,
       sortOptions: [
         { value: 'title', name: 'По названию' },
         { value: 'body', name: 'По содержимому' }
@@ -72,20 +83,28 @@ export default Vue.extend({
       // debugger
       this.dialogVisible = true
     },
+    changePage(pageNumber: number): void {
+      console.log('changePage', pageNumber)
+      this.page = pageNumber
+    },
     async fetchPosts(): Promise<void> {
-      setTimeout(async () => {
-        try {
-          this.isLoading = true
-          const response = await axios.get<Post[]>(
-            'https://jsonplaceholder.typicode.com/posts?_limit=10'
-          )
-          this.posts = [...response.data, ...this.posts]
-        } catch (error) {
-          alert('Ошибка при получении постов')
-        } finally {
-          this.isLoading = false
-        }
-      }, 1500)
+      // setTimeout(async () => {
+      try {
+        this.isLoading = true
+        const response = await axios.get<Post[]>(`https://jsonplaceholder.typicode.com/posts`, {
+          params: {
+            _limit: this.limit,
+            _page: this.page
+          }
+        })
+        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
+        this.posts = [...response.data]
+      } catch (error) {
+        alert('Ошибка при получении постов')
+      } finally {
+        this.isLoading = false
+      }
+      // }, 1500)
     }
   },
   computed: {
@@ -93,14 +112,17 @@ export default Vue.extend({
       return [...this.posts].sort((post1, post2) => {
         return post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
       })
+    },
+    sortedAndSearchedPosts() {
+      return this.sortedPosts.filter((post) => {
+        return post.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+      })
     }
   },
   watch: {
-    // selectedSort(newValue) {
-    //   this.posts.sort((post1, post2) => {
-    //     return post1[newValue]?.localeCompare(post2[newValue])
-    //   })
-    // }
+    page() {
+      this.fetchPosts()
+    }
   },
   mounted() {
     this.fetchPosts()
@@ -123,6 +145,10 @@ export default Vue.extend({
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.search__wrapper {
+  margin: 15px 0;
 }
 
 .spinner {
