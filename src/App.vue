@@ -16,7 +16,8 @@
     <!-- <h2 v-if="posts.length === 0">Список постов пуст</h2> -->
     <div v-if="isLoading" class="spinner"></div>
     <PostList v-else :posts="sortedAndSearchedPosts" @remove="removePost" />
-    <Pagination :currentPage="page" :totalPages="totalPages" @changePage="changePage" />
+    <div ref="observer" style="height: 30px"></div>
+    <!-- <Pagination :currentPage="page" :totalPages="totalPages" @changePage="changePage" /> -->
   </div>
 </template>
 
@@ -28,7 +29,7 @@ import DialogWindow from '@/components/UI/DialogWindow.vue'
 import AppButton from '@/components/UI/AppButton.vue'
 import AppSelect from '@/components/UI/AppSelect.vue'
 import AppInput from '@/components/UI/AppInput.vue'
-import Pagination from '@/components/Pagination.vue'
+// import Pagination from '@/components/Pagination.vue'
 import axios from 'axios'
 
 // import EffectExample from '@/components/EffectExample.vue'
@@ -47,8 +48,8 @@ export default Vue.extend({
     DialogWindow,
     AppButton,
     AppSelect,
-    AppInput,
-    Pagination
+    AppInput
+    // Pagination
   },
   data() {
     return {
@@ -88,9 +89,27 @@ export default Vue.extend({
       this.page = pageNumber
     },
     async fetchPosts(): Promise<void> {
-      // setTimeout(async () => {
+      setTimeout(async () => {
+        try {
+          this.isLoading = true
+          const response = await axios.get<Post[]>(`https://jsonplaceholder.typicode.com/posts`, {
+            params: {
+              _limit: this.limit,
+              _page: this.page
+            }
+          })
+          this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
+          this.posts = [...response.data]
+        } catch (error) {
+          alert('Ошибка при получении постов')
+        } finally {
+          this.isLoading = false
+        }
+      }, 1500)
+    },
+    async loadMorePosts() {
       try {
-        this.isLoading = true
+        this.page += 1
         const response = await axios.get<Post[]>(`https://jsonplaceholder.typicode.com/posts`, {
           params: {
             _limit: this.limit,
@@ -98,13 +117,10 @@ export default Vue.extend({
           }
         })
         this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
-        this.posts = [...response.data]
+        this.posts = [...this.posts, ...response.data]
       } catch (error) {
         alert('Ошибка при получении постов')
-      } finally {
-        this.isLoading = false
       }
-      // }, 1500)
     }
   },
   computed: {
@@ -120,12 +136,26 @@ export default Vue.extend({
     }
   },
   watch: {
-    page() {
-      this.fetchPosts()
-    }
+    // page() {
+    //   this.fetchPosts()
+    // }
   },
   mounted() {
     this.fetchPosts()
+
+    const options = {
+      rootMargin: '0px',
+      threshold: 0.1
+    }
+
+    const callback = (entries: IntersectionObserverEntry[]) => {
+      if (entries[0].isIntersecting && this.page < this.totalPages) {
+        this.loadMorePosts()
+      }
+    }
+
+    const observer = new IntersectionObserver(callback, options)
+    observer.observe(this.$refs.observer)
   }
 })
 </script>
