@@ -6,7 +6,7 @@
     </div>
     <div class="post-btns">
       <AppButton variant="danger" class="btn" @click="$emit('remove', post.id)">Удалить</AppButton>
-      <AppButton class="edit-btn">Изменить</AppButton>
+      <AppButton class="open-btn" @click="$router.push(`/posts/${post.id}`)">Открыть</AppButton>
     </div>
   </div>
 </template>
@@ -16,6 +16,7 @@ import Vue from 'vue'
 import AppButton from '@/components/UI/AppButton.vue'
 
 interface Post {
+  userId: number
   id: number
   title: string
   body: string
@@ -79,7 +80,7 @@ export default Vue.extend({
   border-color: #e74c3c;
 }
 
-.edit-btn {
+.open-btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -93,7 +94,7 @@ export default Vue.extend({
   transition: all 0.3s ease;
 }
 
-.edit-btn:hover {
+.open-btn:hover {
   background-color: teal;
   color: white;
 }
