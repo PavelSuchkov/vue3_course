@@ -64,6 +64,7 @@ export default {
   align-items: center;
   min-width: 120px;
   justify-content: center;
+  white-space: nowrap;
 }
 
 .navbar__btn:hover {

@@ -1,5 +1,10 @@
 <template>
-  <div v-if="post && author" class="post-details">
+  <div v-if="error" class="error-message">
+    {{ error }}
+    <AppButton @click="fetchPost" class="retry-btn">Повторить</AppButton>
+  </div>
+  <div v-else-if="isLoading" class="spinner"></div>
+  <div v-else-if="post && author" class="post-details">
     <!-- <h1>Post Details of post {{ $route.params.id }}</h1> -->
     <h2 class="post-details__title">{{ post.title }}</h2>
     <div class="post-details__content">
@@ -18,7 +23,6 @@
       </div>
     </div>
   </div>
-  <div v-else class="spinner"></div>
 </template>
 
 <script lang="ts">
@@ -56,22 +60,38 @@ export default {
   data() {
     return {
       post: null as Post | null,
-      author: null as Author | null
+      author: null as Author | null,
+      isLoading: true,
+      error: null as string | null
     }
   },
   methods: {
     async fetchPost() {
-      const response = await axios.get<Post>(
-        `https://jsonplaceholder.typicode.com/posts/${this.$route.params.id}`
-      )
-      this.post = response.data
-      await this.fetchAuthor(this.post.userId)
+      try {
+        this.isLoading = true
+        this.error = null
+        const response = await axios.get<Post>(
+          `https://jsonplaceholder.typicode.com/posts/${this.$route.params.id}`
+        )
+        this.post = response.data
+        await this.fetchAuthor(this.post.userId)
+      } catch (e) {
+        this.error = 'Ошибка при загрузке поста'
+        console.error(e)
+      } finally {
+        this.isLoading = false
+      }
     },
     async fetchAuthor(userId: number) {
-      const response = await axios.get<Author>(
-        `https://jsonplaceholder.typicode.com/users/${userId}`
-      )
-      this.author = response.data
+      try {
+        const response = await axios.get<Author>(
+          `https://jsonplaceholder.typicode.com/users/${userId}`
+        )
+        this.author = response.data
+      } catch (e) {
+        this.error = 'Ошибка при загрузке информации об авторе'
+        console.error(e)
+      }
     }
   },
   mounted() {
@@ -185,5 +205,31 @@ export default {
   .post-details__body {
     font-size: 14px;
   }
+}
+
+.error-message {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fee;
+  border-radius: 8px;
+  color: #c33;
+  text-align: center;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.retry-btn {
+  margin-top: 15px;
+  padding: 8px 20px;
+  background-color: #c33;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.retry-btn:hover {
+  background-color: #b22;
 }
 </style>

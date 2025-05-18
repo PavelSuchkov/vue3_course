@@ -18,7 +18,7 @@ export default {
 
 <style scoped>
 .button {
-  width: 100%;
+  /* width: 100%; */
   padding: 10px;
   border: 1px solid rgb(65, 72, 72);
   border-radius: 10px;

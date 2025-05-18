@@ -3,7 +3,7 @@
     <!-- <ToggleStatus /> -->
     <h1>Страница с постами</h1>
     <div class="search__wrapper">
-      <AppInput v-model="searchQuery" placeholder="Поиск..." />
+      <AppInput v-model="searchQuery" placeholder="Поиск..." v-focus />
     </div>
     <div class="app__btns">
       <AppButton @click="showDialog" style="margin: 18px 0">Создать пост</AppButton>
@@ -20,7 +20,7 @@
       <div class="spinner-bottom__loader"></div>
       <div>Загрузка постов...</div>
     </div>
-    <div ref="observer" style="height: 30px"></div>
+    <div v-intersection="loadMorePosts" style="height: 30px"></div>
     <!-- <Pagination :currentPage="page" :totalPages="totalPages" @changePage="changePage" /> -->
   </div>
 </template>
@@ -147,19 +147,19 @@ export default Vue.extend({
   mounted() {
     this.fetchPosts()
 
-    const options = {
-      rootMargin: '0px',
-      threshold: 0.1
-    }
+    // const options = {
+    //   rootMargin: '0px',
+    //   threshold: 0.1
+    // }
 
-    const callback = (entries: IntersectionObserverEntry[]) => {
-      if (entries[0].isIntersecting && this.page < this.totalPages) {
-        this.loadMorePosts()
-      }
-    }
+    // const callback = (entries: IntersectionObserverEntry[]) => {
+    //   if (entries[0].isIntersecting && this.page < this.totalPages) {
+    //     this.loadMorePosts()
+    //   }
+    // }
 
-    const observer = new IntersectionObserver(callback, options)
-    observer.observe(this.$refs.observer)
+    // const observer = new IntersectionObserver(callback, options)
+    // observer.observe(this.$refs.observer)
   }
 })
 </script>
