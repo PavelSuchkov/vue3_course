@@ -1,7 +1,13 @@
 <template>
   <form class="form" @submit.prevent>
     <h4 class="form-title">Создание поста</h4>
-    <AppInput :value="post.title" type="text" placeholder="Название" @input="post.title = $event" />
+    <AppInput
+      v-focus
+      :value="post.title"
+      type="text"
+      placeholder="Название"
+      @input="post.title = $event"
+    />
     <AppInput :value="post.body" type="text" placeholder="Описание" @input="post.body = $event" />
     <!-- <input v-model="post.title" class="form-input" type="text" placeholder="Название" /> -->
     <!-- <input v-model="post.body" class="form-input" type="text" placeholder="Описание" /> -->
