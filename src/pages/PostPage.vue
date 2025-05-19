@@ -45,7 +45,7 @@ interface Post {
 }
 
 export default Vue.extend({
-  name: 'App',
+  name: 'PostPage',
   components: {
     PostForm,
     PostList,

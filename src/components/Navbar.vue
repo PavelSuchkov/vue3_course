@@ -4,7 +4,7 @@
     <div class="navbar__btns">
       <AppButton
         class="navbar__btn"
-        :class="{ active: $route.path === '/posts' }"
+        :class="{ active: $route.path.includes('/posts') }"
         @click="$router.push('/posts')"
         >Посты</AppButton
       >
@@ -13,6 +13,12 @@
         :class="{ active: $route.path === '/about' }"
         @click="$router.push('/about')"
         >О приложении</AppButton
+      >
+      <AppButton
+        class="navbar__btn"
+        :class="{ active: $route.path.includes('/store') }"
+        @click="$router.push('/store')"
+        >Store</AppButton
       >
     </div>
   </div>
@@ -24,6 +30,9 @@ export default {
   name: 'Navbar',
   components: {
     AppButton
+  },
+  mounted() {
+    console.log(this.$route)
   }
 }
 </script>

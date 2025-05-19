@@ -4,7 +4,7 @@ import About from '@/pages/About.vue'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 import PostDetails from '@/pages/PostDetails.vue'
-
+import PostPageWithStore from '@/pages/PostPageWithStore.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -23,6 +23,10 @@ const routes = [
   {
     path: '/posts/:id',
     component: PostDetails
+  },
+  {
+    path: '/store',
+    component: PostPageWithStore
   }
 ]
 
