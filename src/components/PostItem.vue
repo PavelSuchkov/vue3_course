@@ -14,13 +14,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import AppButton from '@/components/UI/AppButton.vue'
-
-interface Post {
-  userId: number
-  id: number
-  title: string
-  body: string
-}
+import { PostType } from '@/store/types/types'
 
 export default Vue.extend({
   name: 'PostItem',
@@ -29,7 +23,7 @@ export default Vue.extend({
   },
   props: {
     post: {
-      type: Object as () => Post,
+      type: Object as () => PostType,
       required: true
     }
   }
